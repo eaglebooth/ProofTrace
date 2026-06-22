@@ -47,6 +47,13 @@ button, input, textarea, select { font: inherit; }
   backdrop-filter: blur(16px);
 }
 .brand { display: flex; align-items: center; gap: 12px; font-weight: 800; font-size: 25px; }
+.brand-logo {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  object-fit: cover;
+  display: block;
+}
 .brand-mark {
   width: 36px; height: 36px; border: 4px solid #111; border-radius: 50%;
   display: grid; place-items: center; font-weight: 900; font-size: 18px;
