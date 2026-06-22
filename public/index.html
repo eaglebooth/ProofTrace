@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>ProofTrace</title>
+    <link rel="stylesheet" href="/styles.css">
+  </head>
+  <body>
+    <header class="nav-shell">
+      <a class="brand" href="#verify" aria-label="ProofTrace home">
+        <span class="brand-mark">P</span>
+        <span>ProofTrace</span>
+      </a>
+      <nav>
+        <a href="#verify">Verify</a>
+        <a href="#process">Process</a>
+        <a href="#metrics">Metrics</a>
+        <a href="#ledger">Ledger</a>
+      </nav>
+      <button id="connectWallet" class="button secondary"><span class="icon">ID</span><span>Connect</span></button>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div class="pill floating left-one">On-chain provenance</div>
+        <div class="pill floating left-two yellow">TEE-ready evidence</div>
+        <div class="pill floating right-one pink">Public verification</div>
+        <div class="hero-icon">PT</div>
+        <p class="eyebrow">Trust layer for AI outputs on 0G</p>
+        <h1>AI outputs need receipts.<br>Attest, store, and verify provenance on 0G.</h1>
+        <p class="hero-copy">Record input hashes, model metadata, output hashes, and issuer signatures. Store artifacts on 0G Storage and anchor attestations on-chain.</p>
+        <div class="hero-actions">
+          <a class="button primary" href="#create">Create attestation</a>
+          <a class="button secondary" href="#verify">Verify output</a>
+        </div>
+        <div class="trust-strip">
+          <span><strong>0G</strong> Storage Ready</span>
+          <span>On-chain Receipts</span>
+          <span>Hash Integrity</span>
+          <span>Public Verification</span>
+        </div>
+      </section>
+
+      <section class="app-grid" id="verify">
+        <article class="panel recent">
+          <div class="panel-head">
+            <div><span class="badge-icon">REC</span><strong>Recent attestations</strong></div>
+            <button class="mini-button" data-scroll="#ledger">View all &gt;</button>
+          </div>
+          <div class="table" id="recentTable"></div>
+        </article>
+
+        <article class="panel verify-panel">
+          <div class="panel-head">
+            <div><span class="badge-icon">OK</span><strong>Verify any output</strong></div>
+          </div>
+          <label>Attestation ID</label>
+          <input id="verifyId" placeholder="att_... or full 0x id">
+          <label>Paste output text or expected hash</label>
+          <textarea id="verifyOutput" placeholder="Paste AI output here"></textarea>
+          <button id="runVerify" class="button primary full">Run verification</button>
+          <div id="verifyResult" class="result muted">Verification is public and does not require an account.</div>
+        </article>
+
+        <article class="panel trust-panel">
+          <div class="panel-head">
+            <div><span class="badge-icon">TR</span><strong>Trust levels</strong></div>
+          </div>
+          <div class="trust-level"><span class="level-dot green">Y</span><strong>Self-attested</strong><p>Declared by the issuer. Basic transparency.</p></div>
+          <div class="trust-level"><span class="level-dot yellow">Y</span><strong>Provider-attested</strong><p>Verified by the model or service provider.</p></div>
+          <div class="trust-level"><span class="level-dot green">Y</span><strong>TEE-backed</strong><p>Verified execution in a trusted environment.</p></div>
+        </article>
+      </section>
+
+      <section class="workspace" id="create">
+        <div class="section-copy">
+          <p class="eyebrow">Issue a certificate</p>
+          <h2>Create a real AI output attestation.</h2>
+          <p>Use this form for DAO recommendations, agent reports, code audit findings, or any AI-generated artifact. The API computes hashes, stores the artifact locally as a 0G adapter, and writes the registry record.</p>
+        </div>
+        <form id="attestForm" class="panel form-panel">
+          <div class="form-row">
+            <label>Application name<input name="appName" value="DAO Recommendation Agent"></label>
+            <label>Source type
+              <select name="sourceType">
+                <option>0G Compute</option>
+                <option>OpenAI</option>
+                <option>custom model</option>
+                <option>local</option>
+              </select>
+            </label>
+          </div>
+          <div class="form-row">
+            <label>Model name<input name="modelName" value="0G Compute / Llama-3.1"></label>
+            <label>Model version<input name="modelVersion" value="8B-Instruct"></label>
+          </div>
+          <div class="form-row">
+            <label>Trust level
+              <select name="attestationLevel">
+                <option value="self">Self-attested</option>
+                <option value="provider-TEE" selected>Provider-TEE</option>
+                <option value="reproducible">Reproducible</option>
+              </select>
+            </label>
+            <label>Prompt disclosure
+              <select name="promptDisclosure">
+                <option>public</option>
+                <option selected>redacted</option>
+                <option>encrypted</option>
+                <option>hash-only</option>
+              </select>
+            </label>
+          </div>
+          <label>Input / proposal<textarea name="input">DAO Proposal #42 asks for 250,000 0G in ecosystem grants.</textarea></label>
+          <label>AI output<textarea name="output">Recommendation: approve with milestone-based release, external reporting, and a treasury exposure cap.</textarea></label>
+          <div class="form-row">
+            <label>Evidence ref<input name="evidenceRef" value="tee://provider/demo-quote-001"></label>
+            <label>DAO proposal<input name="daoProposal" value="Proposal #42"></label>
+          </div>
+          <button class="button primary full" type="submit">Create attestation</button>
+          <div id="createResult" class="result muted">Wallet signature is used when available; otherwise the dev issuer is recorded.</div>
+        </form>
+      </section>
+
+      <section class="process-section" id="process">
+        <div class="section-copy">
+          <p class="eyebrow">Process</p>
+          <h2>From AI result to public receipt.</h2>
+        </div>
+        <div class="process-grid">
+          <article class="process-card pink"><span>(01)</span><h3>Commit</h3><p>Hash the input, output, and model metadata. The issuer signs the commitment.</p></article>
+          <article class="process-card mint"><span>(02)</span><h3>Store</h3><p>Persist artifact metadata through the 0G Storage adapter and keep sensitive content hash-only when needed.</p></article>
+          <article class="process-card blue"><span>(03)</span><h3>Anchor</h3><p>Write the attestation ID, issuer, trust level, storage pointer, and timestamp to the registry.</p></article>
+          <article class="process-card yellow"><span>(04)</span><h3>Verify</h3><p>Anyone can recompute the hash and check issuer, revocation, and optional TEE evidence.</p></article>
+        </div>
+      </section>
+
+      <section class="metrics-section" id="metrics">
+        <h2>Registry numbers</h2>
+        <p>Operational signals for the public AI output registry.</p>
+        <div class="metrics">
+          <div class="metric"><strong id="metricTotal">0</strong><span>Total attestations</span></div>
+          <div class="metric"><strong id="metricTee">0</strong><span>TEE-backed records</span></div>
+          <div class="metric"><strong id="metricIssuers">0</strong><span>Unique issuers</span></div>
+          <div class="metric"><strong id="metricRevoked">0</strong><span>Revoked records</span></div>
+        </div>
+      </section>
+
+      <section class="ledger-section" id="ledger">
+        <div class="panel ledger-panel">
+          <div class="panel-head">
+            <div><span class="badge-icon">LG</span><strong>Ledger activity</strong></div>
+            <button class="mini-button" id="refreshLedger">Refresh</button>
+          </div>
+          <div class="ledger-table" id="ledgerTable"></div>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <span>(c) ProofTrace. Trust layer for AI output provenance.</span>
+      <span>Registry / Storage adapter / Verification API</span>
+    </footer>
+
+    <script src="/app.js"></script>
+  </body>
+</html>
